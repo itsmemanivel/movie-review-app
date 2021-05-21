@@ -31,7 +31,7 @@ class MoviesPageProvider extends ChangeNotifier {
 
   getTopRatedMovies() async {
     try {
-      final responce = await movieDio.get(Commons.topRatedMoviesLink());
+      final responce = await dio.get(Commons.topRatedMoviesLink());
       _topRatedMovies = MovieList.fromJson(responce.data);
     } catch (e) {
       print(e);
@@ -40,7 +40,7 @@ class MoviesPageProvider extends ChangeNotifier {
 
   getPopularMovies() async {
     try {
-      final responce = await movieDio.get(Commons.popularMoviesLink());
+      final responce = await dio.get(Commons.popularMoviesLink());
       _popularMovies = MovieList.fromJson(responce.data);
       notifyListeners();
     } catch (e) {
@@ -50,7 +50,7 @@ class MoviesPageProvider extends ChangeNotifier {
 
   getNowPlayingMovies() async {
     try {
-      final responce = await movieDio.get(Commons.nowPlayingMoviesLink(pageNumber: 2));
+      final responce = await dio.get(Commons.nowPlayingMoviesLink(pageNumber: 2));
       _nowPlayingMovies = MovieList.fromJson(responce.data);
       notifyListeners();
     } catch (e) {
@@ -60,7 +60,7 @@ class MoviesPageProvider extends ChangeNotifier {
 
   getUpComingMovies() async {
     try {
-      final responce = await movieDio.get(Commons.upcomingMoviesLink());
+      final responce = await dio.get(Commons.upcomingMoviesLink());
       _upcomingMovies = MovieList.fromJson(responce.data);
       notifyListeners();
     } catch (e) {
@@ -70,7 +70,7 @@ class MoviesPageProvider extends ChangeNotifier {
 
   getTrendingMovies() async {
     try {
-      final responce = await movieDio.get(Commons.trendingMoviesLink());
+      final responce = await dio.get(Commons.trendingMoviesLink());
       _trendingMovies = MovieList.fromJson(responce.data);
       notifyListeners();
     } catch (e) {

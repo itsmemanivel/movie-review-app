@@ -22,9 +22,8 @@ class _MovieCardState extends State<MovieCard> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) => MovieReviewPage(
-                    id: widget.movie.id,
-                    imgUrl: '${Commons.imageBaseUrl}${widget.movie.posterPath}',
-                    title: widget.movie.title)));
+                      movie: widget.movie,
+                    )));
       },
       child: Stack(
         children: [

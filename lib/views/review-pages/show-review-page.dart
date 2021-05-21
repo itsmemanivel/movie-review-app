@@ -2,23 +2,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie_app/models/cast.dart';
-import 'package:movie_app/models/movie-details.dart';
-import 'package:movie_app/models/movie.dart';
+import 'package:movie_app/models/tvshow-details.dart';
+import 'package:movie_app/models/tvshows.dart';
 import 'package:movie_app/utils/commons.dart';
 import 'package:movie_app/utils/dio-request.dart';
 
-class MovieReviewPage extends StatefulWidget {
-  final Movie movie;
+class ShowReviewPage extends StatefulWidget {
+  final TvShow tvShow;
 
-  const MovieReviewPage({Key key, @required this.movie}) : super(key: key);
+  const ShowReviewPage({Key key, @required this.tvShow}) : super(key: key);
   @override
-  _MovieReviewPageState createState() => _MovieReviewPageState();
+  _ShowReviewPageState createState() => _ShowReviewPageState();
 }
 
-class _MovieReviewPageState extends State<MovieReviewPage> {
+class _ShowReviewPageState extends State<ShowReviewPage> {
   Casting casting;
-  MovieDetails movieDetails;
+  TvShowsDetails tvShowsDetails;
   bool loading = true;
+  bool episodeLoading = true;
+  int currentIndex = 0;
+
+  void changeIndex(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -30,11 +39,12 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
       loading = true;
     });
     try {
-      final castingResponce = await dio.get(Commons.movieCastLink(id: widget.movie.id));
-      final detailsResponce = await dio.get(Commons.movieDetailsLink(id: widget.movie.id));
+      print(widget.tvShow.id);
+      final castingResponce = await dio.get(Commons.showCastLinkLink(id: widget.tvShow.id));
+      final detailsResponce = await dio.get(Commons.showDetailsLink(id: widget.tvShow.id));
       setState(() {
         casting = Casting.fromJson(castingResponce.data);
-        movieDetails = MovieDetails.fromJson(detailsResponce.data);
+        tvShowsDetails = TvShowsDetails.fromJson(detailsResponce.data);
       });
       print(detailsResponce.data);
       setState(() {
@@ -47,6 +57,8 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
       });
     }
   }
+
+  getEpisodes() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +78,7 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
                       children: [
                         CustomPaint(
                           foregroundPainter: FadingEffect(),
-                          child: Image.network('${Commons.imageBaseUrl}${widget.movie.posterPath}'),
+                          child: Image.network('${Commons.imageBaseUrl}${widget.tvShow.posterPath}'),
                         ),
                         Positioned(
                             top: 20,
@@ -87,9 +99,9 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
                                             blurRadius: 1.0, // soften the shadow
                                             spreadRadius: 1.5, //extend the shadow
                                             offset: Offset(
-                                              1.0, // Move to right 10  horizontally
-                                              1.0, // Move to bottom 10 Vertically
-                                            ))
+                                                1.0, // Move to right 10  horizontally
+                                                1.0 // Move to bottom 10 Vertically
+                                                ))
                                       ]),
                                   child: Icon(Icons.navigate_before_outlined)),
                             )),
@@ -98,7 +110,7 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
                           left: 20,
                           right: 20,
                           child: Text(
-                            widget.movie.title,
+                            widget.tvShow.name,
                             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 30),
                           ),
                         ),
@@ -108,15 +120,18 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       child: Text(
-                        widget.movie.overview ?? '',
+                        widget.tvShow.overview ?? '',
                         textAlign: TextAlign.justify,
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 12),
                       ),
                     ),
-                    if (movieDetails != null) languageCard(),
-                    if (movieDetails != null) popularityCard(),
-                    if (movieDetails != null) genresCard(),
+                    if (tvShowsDetails != null) popularityCard(),
+                    if (tvShowsDetails != null) languageCard(),
+                    if (tvShowsDetails != null) genresCard(),
                     if (casting.cast.isNotEmpty) castingWidget(),
+                    if (tvShowsDetails != null)
+                      if (tvShowsDetails.seasons?.isNotEmpty) seasonsCard(),
+                    if (tvShowsDetails == null) titleCard(title: 'No Seasons Available'),
                   ],
                 ),
               ),
@@ -124,31 +139,7 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
     );
   }
 
-  Widget genresCard() {
-    String genres = ' ';
-    for (int i = 0; i < movieDetails.genres.length; i++) {
-      setState(() {
-        genres += movieDetails.genres[i].name + ', ';
-      });
-    }
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Text(
-        'Genres: ${genres.toUpperCase()}',
-        textAlign: TextAlign.justify,
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12),
-      ),
-    );
-  }
-
   Widget languageCard() {
-    List<String> languages = [];
-    for (int i = 0; i < movieDetails.spokenLanguages.length; i++) {
-      setState(() {
-        languages.add(movieDetails.spokenLanguages[i].name);
-      });
-    }
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -156,12 +147,12 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Origin Language: ${movieDetails.originalLanguage.toUpperCase()}',
+            'Origin Language: ${tvShowsDetails.originalLanguage.toUpperCase()}',
             textAlign: TextAlign.justify,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12),
           ),
           Text(
-            'Available Languages: ${languages.toString().toUpperCase()}',
+            'Available Languages: ${tvShowsDetails.languages.toString().toUpperCase()}',
             textAlign: TextAlign.justify,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12),
           ),
@@ -178,7 +169,7 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Popularity, Total votes: ${(movieDetails.popularity * 1000).round()}',
+            'Popularity, Total votes: ${(tvShowsDetails.popularity * 1000).round()}',
             textAlign: TextAlign.justify,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12),
           ),
@@ -198,7 +189,7 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
                   size: 14,
                 ),
                 Text(
-                  ' ' + movieDetails.voteAverage.toString() + ' ',
+                  ' ' + tvShowsDetails.voteAverage.toString() + ' ',
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14),
                 ),
               ],
@@ -206,6 +197,66 @@ class _MovieReviewPageState extends State<MovieReviewPage> {
           )
         ],
       ),
+    );
+  }
+
+  Widget genresCard() {
+    String genres = ' ';
+    for (int i = 0; i < tvShowsDetails.genres.length; i++) {
+      setState(() {
+        genres += tvShowsDetails.genres[i].name + ', ';
+      });
+    }
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Text(
+        'Genres: ${genres.toUpperCase()}',
+        textAlign: TextAlign.justify,
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12),
+      ),
+    );
+  }
+
+  Widget seasonsCard() {
+    return GridView.count(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      childAspectRatio: 7.0 / 15,
+      padding: EdgeInsets.all(10),
+      mainAxisSpacing: 8,
+      crossAxisSpacing: 8,
+      crossAxisCount: 2,
+      children: List.generate(
+          tvShowsDetails.seasons.length,
+          (index) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.width / 1.5,
+                    alignment: Alignment.bottomLeft,
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                            image: NetworkImage('${Commons.imageBaseUrl}${tvShowsDetails.seasons[index].posterPath}'),
+                            fit: BoxFit.cover)),
+                  ),
+                  Text(
+                    tvShowsDetails.seasons[index].name,
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 22),
+                  ),
+                  Text(
+                    'Total Episodes: ' + tvShowsDetails.seasons[index].episodeCount.toString(),
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 10),
+                  ),
+                  Text(
+                    'Published on: ' + '${tvShowsDetails.seasons[index].airDate ?? 'not published'}',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 10),
+                  ),
+                ],
+              )),
     );
   }
 
@@ -303,7 +354,6 @@ class FadingEffect extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Rect rect = Rect.fromPoints(Offset(0, 0), Offset(size.width, size.height));
     LinearGradient lg = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
-      //create 2 white colors, one transparent
       Colors.transparent,
       Commons.bgColor,
     ]);

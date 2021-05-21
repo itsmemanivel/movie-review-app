@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/models/movie-list.dart';
 import 'package:movie_app/utils/commons.dart';
-import 'package:movie_app/views/home/movie-card.dart';
-import 'package:movie_app/views/home/movies-provider.dart';
-import 'package:movie_app/views/home/movies-toprated-widget.dart';
+import 'package:movie_app/views/movies/movie-card.dart';
+import 'package:movie_app/views/movies/movies-provider.dart';
+import 'package:movie_app/views/movies/movies-toprated-widget.dart';
 import 'package:provider/provider.dart';
 
 class MoviesPage extends StatefulWidget {

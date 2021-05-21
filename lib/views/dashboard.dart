@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie_app/utils/commons.dart';
+import 'package:movie_app/views/Explore.dart';
+import 'package:movie_app/views/about.dart';
+import 'package:movie_app/views/tvshows/tv-shows.dart';
 
 import '../utils/bottomNavigationBarCard.dart';
-import 'home/movies.dart';
+import 'movies/movies.dart';
 
 class DashBoard extends StatefulWidget {
   @override
@@ -17,9 +20,9 @@ class _HomePageState extends State<DashBoard> {
 
   List<Widget> pages = [
     MoviesPage(),
-    MoviesPage(),
-    MoviesPage(),
-    MoviesPage(),
+    TvShowsPage(),
+    ExplorePage(),
+    AboutPage(),
   ];
 
   @override
@@ -82,10 +85,10 @@ class _HomePageState extends State<DashBoard> {
             activeColor: Colors.white,
           ),
           BottomNavyBarItem(
-            title: Text('Favorites'),
+            title: Text('About'),
             textAlign: TextAlign.center,
             icon: Icon(
-              CupertinoIcons.heart_fill,
+              CupertinoIcons.person,
               color: Colors.white,
             ),
             activeColor: Colors.white,

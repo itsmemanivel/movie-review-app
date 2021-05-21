@@ -6,10 +6,10 @@ class Commons {
   //movie/{movie_id}/reviews?api_key=<<api_key>>&language=en-US&page=1
   static const movieAPIKey = 'ee2c4d00a712b8be561329d22c99a4c5';
   static const imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
-  static const movieBaseUrl = 'https://api.themoviedb.org/3/';
+  static const baseUrl = 'https://api.themoviedb.org/3/';
 
   static String nowPlayingMoviesLink({int pageNumber}) {
-    return 'movie/now_playing?api_key=$movieAPIKey&language=ta&page=${pageNumber ?? 1}';
+    return 'movie/now_playing?api_key=$movieAPIKey&language=en-US&page=${pageNumber ?? 1}';
   }
 
   static String popularMoviesLink({int pageNumber}) {
@@ -32,12 +32,48 @@ class Commons {
     return 'movie/$id/reviews?api_key=$movieAPIKey&language=en-US&page=1';
   }
 
-  static String searchLink({String value}) {
+  static String searchMovieLink({String value}) {
     return 'search/movie?api_key=$movieAPIKey&query=$value';
   }
 
-  static String castLink({num id}) {
+  static String searchTvShowsLink({String value}) {
+    return 'search/tv?api_key=$movieAPIKey&query=$value';
+  }
+
+  static String movieCastLink({num id}) {
     return 'movie/$id/credits?api_key=$movieAPIKey&language=en-US&page=1';
+  }
+
+  static String showCastLinkLink({num id}) {
+    return 'tv/$id/credits?api_key=$movieAPIKey&language=en-US&page=1';
+  }
+
+  static String showDetailsLink({num id}) {
+    return 'tv/$id?api_key=$movieAPIKey&language=en-US&page=1';
+  }
+
+  static String movieDetailsLink({num id}) {
+    return 'movie/$id?api_key=$movieAPIKey&language=en-US&page=1';
+  }
+
+  static String topRatedShowsLink({int pageNumber}) {
+    return 'tv/top_rated?api_key=$movieAPIKey&language=ta&page=${pageNumber ?? 1}';
+  }
+
+  static String airingTodayShowsLink({int pageNumber}) {
+    return 'tv/airing_today?api_key=$movieAPIKey&language=en-US&page=${pageNumber ?? 1}';
+  }
+
+  static String onTheAirShowsLink({int pageNumber}) {
+    return 'tv/on_the_air?api_key=$movieAPIKey&language=en-US&page=${pageNumber ?? 1}';
+  }
+
+  static String popularShowsLink({int pageNumber}) {
+    return 'tv/popular?api_key=$movieAPIKey&language=en-US&page=${pageNumber ?? 1}';
+  }
+
+  static String showEpisodesLink({num id}) {
+    return 'tv/$id?api_key=$movieAPIKey&language=en-US&page=1';
   }
 
   static const hintColor = Color(0xFF4D0F29);

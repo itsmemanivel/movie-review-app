@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/views/dashboard.dart';
-import 'package:movie_app/views/home/movies-provider.dart';
+import 'package:movie_app/views/movies/movies-provider.dart';
+import 'package:movie_app/views/tvshows/tv-show-provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => MoviesPageProvider()),
+        ChangeNotifierProvider(create: (context) => TvShowsPageProvider()),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
