@@ -31,8 +31,9 @@
 
 flutter: <a href= "https://flutter.dev/">Flutter documents</a>
 <h4>State management : <a href= "https://flutter.dev/docs/development/data-and-backend/state-mgmt/options">Flutter State management documents</a></h4> 
-setState: <a href= "https://medium.com/@agungsurya/basic-state-management-in-google-flutter-6ee73608f96d">SetState documents</a>
-Provider: <a href= "https://pub.dev/packages/provider">Provider Pakage</a>
+setState: <a href= "https://medium.com/@agungsurya/basic-state-management-in-google-flutter-6ee73608f96d">SetState documents</a><br>
+Provider: <a href= "https://pub.dev/packages/provider">Provider Pakage</a><br>
 <h4>Other packages</h4>
-
-
+<p>Dio: <a href= "https://pub.dev/packages/dio">Dio Pakage</a> for API request</p>
+<p>carousel_slider: <a href= "https://pub.dev/packages/carousel_slider">Slider Pakage</a> for auto slide in Movies screen</p>
+<p>url_launcher: <a href= "https://pub.dev/packages/url_launcher">url launcher Pakage</a> to redirect to link from app</p>
