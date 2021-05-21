@@ -3,8 +3,9 @@ import 'package:dio/dio.dart';
 import 'commons.dart';
 
 BaseOptions options = BaseOptions(
-  baseUrl: Commons.movieBaseUrl,
+  baseUrl: Commons.baseUrl,
   connectTimeout: 5000,
   receiveTimeout: 3000,
 );
-Dio movieDio = Dio(options);
+
+Dio dio = Dio(options);
